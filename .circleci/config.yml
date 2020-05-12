@@ -1,0 +1,62 @@
+version: "2.1"
+orbs:
+  aws-ecr: circleci/aws-ecr@6.8.2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:latest
+      
+    working_directory: ~/app
+
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+  build_container:
+      docker:
+        - image: rhinogram/node-awscli:latest
+
+      working_directory: ~/app
+
+      steps:
+        - setup_remote_docker
+        - attach_workspace:
+            at: ~/app
+        - aws-ecr/build-and-push-image:
+            repo: test/app
+            tag: 'latest,$CIRCLE_SHA1'
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /master/
+      - approve_build_container:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /master/
+      - build_container:
+          requires:
+            - approve_build_container
+          filters:
+            branches:
+              ignore: /master/
