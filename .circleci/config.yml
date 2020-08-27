@@ -1,6 +1,6 @@
-version: "2.1"
+version: 2.1
 orbs:
-  aws-ecr: circleci/aws-ecr@6.8.2
+  aws-ecr: circleci/aws-ecr@6.12.2
 jobs:
   build:
     docker:
@@ -25,20 +25,6 @@ jobs:
           paths:
             - node_modules
 
-  build_container:
-      docker:
-        - image: rhinogram/node-awscli:latest
-
-      working_directory: ~/app
-
-      steps:
-        - setup_remote_docker
-        - attach_workspace:
-            at: ~/app
-        - aws-ecr/build-and-push-image:
-            repo: test/app
-            tag: 'latest,$CIRCLE_SHA1'
-
 workflows:
   version: 2
   build:
@@ -54,9 +40,8 @@ workflows:
           filters:
             branches:
               ignore: /master/
-      - build_container:
-          requires:
-            - approve_build_container
-          filters:
-            branches:
-              ignore: /master/
+      - aws-ecr/build-and-push-image:
+          create-repo: false
+          region: eu-central-1
+          repo: test/app
+          tag: 'latest,$CIRCLE_SHA1'
