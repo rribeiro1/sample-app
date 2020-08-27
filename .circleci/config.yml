@@ -42,6 +42,5 @@ workflows:
               ignore: /master/
       - aws-ecr/build-and-push-image:
           create-repo: false
-          region: eu-central-1
           repo: test/app
           tag: 'latest,$CIRCLE_SHA1'
