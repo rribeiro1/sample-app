@@ -12,8 +12,9 @@ jobs:
     outputs:
       status: ${{ steps.status.outputs.status }}
     if: |
-      ((github.event_name == 'push' || github.event_name == 'delete') && github.actor != 'dependabot[bot]') ||
-      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
+      (github.event_name == 'push' && github.actor != 'dependabot[bot]') ||
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]') ||
+      github.event_name == 'delete'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
