@@ -1,6 +1,8 @@
 name: Test Outputs
 
-on: [push, delete]
+on:
+  push:
+  delete:
   # for dependabot, see: https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-841656411
   pull_request_target:
 
