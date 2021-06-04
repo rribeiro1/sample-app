@@ -20,7 +20,7 @@ jobs:
         run: echo "::set-output name=status::locked"
 
   run-test:
-    name: Run Smoke Test
+    name: Run Test
     needs: build
     runs-on: ubuntu-latest
     if: ${{ needs.build.outputs.status == 'unlocked' }}
@@ -29,8 +29,8 @@ jobs:
         run: echo "Just a test"
 
   pos-test:
-    name: Pos Smoke Test
-    needs: run-test
+    name: Pos Test
+    needs: [ run-test, build ]
     runs-on: ubuntu-latest
     steps:
       - name: Test
