@@ -10,6 +10,8 @@
   "author": "Rafael Ribeiro",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "dotenv": "^9.0.1",
+    "express": "^4.10.0",
+    "react": "^15.5.2"
   }
 }
