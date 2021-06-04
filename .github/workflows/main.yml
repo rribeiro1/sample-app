@@ -1,0 +1,37 @@
+name: Test Outputs
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.status.outputs.status }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Status
+        id: status
+        run: echo "::set-output name=status::locked"
+
+  run-test:
+    name: Run Smoke Test
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ needs.build.outputs.status == 'unlocked' }}
+    steps:
+      - name: Test
+        run: echo "Just a test"
+
+  pos-test:
+    name: Pos Smoke Test
+    needs: run-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: echo "Just a test"
