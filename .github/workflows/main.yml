@@ -30,8 +30,9 @@ jobs:
 
   pos-test:
     name: Pos Test
-    needs: [ run-test, build ]
+    needs: run-test
     runs-on: ubuntu-latest
+    if: contains(needs.*.result, 'skipped')
     steps:
       - name: Test
         run: echo "Just a test"
