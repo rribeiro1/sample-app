@@ -39,4 +39,4 @@ jobs:
     if: ${{ always() && (contains(needs.*.result, 'success') || contains(needs.*.result, 'skipped')) }}
     steps:
       - name: Test
-        run: echo "Just a test"
+        run: echo ${{ needs.run-test.result }}
