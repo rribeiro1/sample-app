@@ -36,7 +36,7 @@ jobs:
     name: Pos Test
     needs: run-test
     runs-on: ubuntu-latest
-    if: contains(needs.*.result, 'skipped')
+    if: ${{ always() && (contains(needs.*.result, 'success') || contains(needs.*.result, 'skipped')) }}
     steps:
       - name: Test
         run: echo "Just a test"
